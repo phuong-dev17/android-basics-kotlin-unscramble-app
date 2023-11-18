@@ -86,7 +86,7 @@ class GameFragment : Fragment() {
                 }
             }
             false -> {
-                binding.textInputEditText.error = getString(R.string.false_submitted_word)
+                setErrorTextField(true)
             }
         }
 
@@ -98,7 +98,14 @@ class GameFragment : Fragment() {
      * Increases the word count.
      */
     private fun onSkipWord() {
-
+        // neu qua so luong tu roi -> hien thong bao dialog
+        if(!viewModel.nextWord()) {
+            showFinalScoreDialog()
+        } else {
+            // neu chua qua so luong tu -> tao ra tu moi
+            setErrorTextField(false)
+            updateNextWordOnScreen()
+        }
     }
 
     /*
@@ -115,6 +122,7 @@ class GameFragment : Fragment() {
      * restart the game.
      */
     private fun restartGame() {
+        viewModel.resetData()
         setErrorTextField(false)
         updateNextWordOnScreen()
     }

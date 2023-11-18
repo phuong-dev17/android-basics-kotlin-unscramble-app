@@ -23,9 +23,7 @@ class GameViewModel :ViewModel() {
         }
 
     init {
-        Log.d("P123", "init game view model")
         getNextWord()
-        Log.d("P123", _currentScrambledWord)
     }
     override fun onCleared() {
         super.onCleared()
@@ -43,11 +41,13 @@ class GameViewModel :ViewModel() {
         var randomWord = allWordsList.random()
         if(randomWord !in usedWordsList) {
             var scrambledRandomWord: String
+
             do {
                 val tempWord = randomWord.toCharArray()
                 tempWord.shuffle()
                 scrambledRandomWord = String(tempWord)
             } while (scrambledRandomWord == randomWord)
+
             usedWordsList.add(randomWord)
             _currentScrambledWord = scrambledRandomWord
         } else {
@@ -65,11 +65,17 @@ class GameViewModel :ViewModel() {
         } else {
             return false
         }
-
     }
 
     fun isWordCorrect(submittedWord:String) :Boolean {
         val currentWord = usedWordsList.last()
         return currentWord == submittedWord
+    }
+
+    fun resetData () {
+        _score = 0
+        _currentWordCount = 0
+        usedWordsList = mutableListOf<String>()
+        getNextWord()
     }
 }
