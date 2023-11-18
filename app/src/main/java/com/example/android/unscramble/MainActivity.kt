@@ -17,6 +17,7 @@
 package com.example.android.unscramble
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 
 /**
@@ -26,6 +27,22 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.d("PHUONG", "Main onCreate called")
         setContentView(R.layout.main_activity)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Log.d("PHUONG", "Main onStart called")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.d("PHUONG", "Main onResume called")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d("PHUONG", "Main onDestroy called")
     }
 }
