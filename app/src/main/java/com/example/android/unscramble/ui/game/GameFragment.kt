@@ -21,6 +21,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.android.unscramble.R
@@ -45,7 +46,7 @@ class GameFragment : Fragment() {
             savedInstanceState: Bundle?
     ): View {
         // Inflate the layout XML file and return a binding object instance
-        binding = GameFragmentBinding.inflate(inflater, container, false)
+        binding = DataBindingUtil.inflate(layoutInflater,R.layout.game_fragment,container,false)
         Log.d("PHUONGGameFragment", "GameFragment created/re-created!")
         return binding.root
     }
@@ -53,23 +54,14 @@ class GameFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Log.d("PHUONGGameFragment", "GameFragment VIEWcreated/re-created!")
+        binding.gameViewModel = viewModel
+        binding.maxNoOfWords = MAX_NO_OF_WORDS
+        binding.lifecycleOwner = viewLifecycleOwner
 
         // Setup a click listener for the Submit and Skip buttons.
         binding.submit.setOnClickListener { onSubmitWord() }
         binding.skip.setOnClickListener { onSkipWord() }
 
-        viewModel.currentScrambledWord.observe(viewLifecycleOwner) {newScrambledWord ->
-            binding.textViewUnscrambledWord.text = newScrambledWord
-        }
-
-        viewModel.score.observe(viewLifecycleOwner) {newScore ->
-            binding.score.text = getString(R.string.score, newScore)
-        }
-
-        viewModel.currentWordCount.observe(viewLifecycleOwner) { currentWordCount ->
-            binding.wordCount.text = getString(
-                R.string.word_count, currentWordCount, MAX_NO_OF_WORDS)
-        }
     }
 
     override fun onDetach() {
