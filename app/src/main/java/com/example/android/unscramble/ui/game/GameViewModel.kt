@@ -1,23 +1,30 @@
 package com.example.android.unscramble.ui.game
 
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 class GameViewModel :ViewModel() {
     init {
         Log.d("GameFragment", "GameViewModel created!")
     }
-    private var _score = 0
-    private var _currentWordCount = 0
-    private var _currentScrambledWord = "test"
+    private var _score = MutableLiveData<Int>(0)
+    private var _currentWordCount = MutableLiveData<Int>(1)
+    private var _currentScrambledWord = MutableLiveData<String>()
     private var usedWordsList = mutableListOf<String>()
 
-    val score: Int
+    val score: LiveData<Int>
         get() {
             return _score
         }
 
-    val currentScrambledWord: String
+    val currentWordCount : LiveData<Int>
+        get() {
+            return _currentWordCount
+        }
+
+    val currentScrambledWord: LiveData<String>
         get() {
             return _currentScrambledWord
         }
@@ -49,7 +56,7 @@ class GameViewModel :ViewModel() {
             } while (scrambledRandomWord == randomWord)
 
             usedWordsList.add(randomWord)
-            _currentScrambledWord = scrambledRandomWord
+            _currentScrambledWord.value = scrambledRandomWord
         } else {
             getNextWord()
         }
@@ -61,6 +68,7 @@ class GameViewModel :ViewModel() {
         // neu choi het so luong tu roi thi se tra ra false
         if (usedWordsList.size < MAX_NO_OF_WORDS ) {
             getNextWord()
+            _currentWordCount.value = (_currentWordCount.value)?.inc()
             return true
         } else {
             return false
@@ -69,12 +77,13 @@ class GameViewModel :ViewModel() {
 
     fun isWordCorrect(submittedWord:String) :Boolean {
         val currentWord = usedWordsList.last()
+        _score.value = (_score.value)?.plus(SCORE_INCREASE)
         return currentWord == submittedWord
     }
 
     fun resetData () {
-        _score = 0
-        _currentWordCount = 0
+        _score.value = 0
+        _currentWordCount.value = 0
         usedWordsList = mutableListOf<String>()
         getNextWord()
     }
